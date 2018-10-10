@@ -574,7 +574,7 @@ boost::filesystem::path GetDefaultDataDir()
     return pathRet / "Library/Application Support/DashCore";
 #else
     // Unix
-    return pathRet / ".dashcore";
+    return pathRet / ".legacycore";
 #endif
 #endif
 }
@@ -1013,4 +1013,3 @@ std::string SafeIntVersionToString(uint32_t nVersion)
         return "invalid_version";
     }
 }
-
