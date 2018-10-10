@@ -16,8 +16,13 @@
 #include <assert.h>
 
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem.hpp>
 
 #include "chainparamsseeds.h"
+
+bool seedsDisabled() {
+    return boost::filesystem::exists(".disableseeds");
+}
 
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
@@ -198,12 +203,14 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x00000ffd590b1485b3caadc19b22e6379c733355108f107a430458cdf3407ab6"));
         assert(genesis.hashMerkleRoot == uint256S("0xe0028eb9648db56b1ac77cf090b99048a8007e2bb64b68f092c03c7f56a662c7"));
 
-
-        vSeeds.push_back(CDNSSeedData("dash.org", "dnsseed.dash.org"));
-        vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
-        vSeeds.push_back(CDNSSeedData("dashpay.io", "dnsseed.dashpay.io"));
-
+        if (seedsDisabled()) {
+              printf("Seeds disabled on mainnet\n");
+        } else {
+            vSeeds.push_back(CDNSSeedData("dash.org", "dnsseed.dash.org"));
+            vSeeds.push_back(CDNSSeedData("dashdot.io", "dnsseed.dashdot.io"));
+            vSeeds.push_back(CDNSSeedData("masternode.io", "dnsseed.masternode.io"));
+            vSeeds.push_back(CDNSSeedData("dashpay.io", "dnsseed.dashpay.io"));
+        }
         // Dash addresses start with 'X'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,76);
         // Dash script addresses start with '7'
@@ -348,9 +355,13 @@ public:
 
         vFixedSeeds.clear();
         vSeeds.clear();
-        // nodes with support for servicebits filtering should be at the top
-        vSeeds.push_back(CDNSSeedData("dashdot.io",  "testnet-seed.dashdot.io"));
-        vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
+        if (seedsDisabled()) {
+              printf("Seeds disabled on testnet\n");
+        } else {
+            // nodes with support for servicebits filtering should be at the top
+            vSeeds.push_back(CDNSSeedData("dashdot.io",  "testnet-seed.dashdot.io"));
+            vSeeds.push_back(CDNSSeedData("masternode.io", "test.dnsseed.masternode.io"));
+        }
 
         // Testnet Dash addresses start with 'y'
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,140);
@@ -387,7 +398,7 @@ public:
             ( 143200, uint256S("0x0000000004a7878409189b7a8f75b3815d9b8c45ee8f79955a6c727d83bddb04"))
         };
 
-        chainTxData = ChainTxData{        
+        chainTxData = ChainTxData{
             1529294335, // * UNIX timestamp of last known number of transactions
             5810120,    // * total number of transactions between genesis and that timestamp
                         //   (the tx=... number in the SetBestChain debug.log lines)

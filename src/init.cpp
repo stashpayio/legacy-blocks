@@ -9,6 +9,7 @@
 #endif
 
 #include "init.h"
+#include "stash.h"
 
 #include "addrman.h"
 #include "amount.h"
@@ -1734,6 +1735,12 @@ bool AppInitMain(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (!est_filein.IsNull())
         mempool.ReadFeeEstimates(est_filein);
     fFeeEstimatesInitialized = true;
+
+    if (IsArgSet("-processlegacyblocks")) {
+        processForStash();
+        return false;
+    }
+
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET

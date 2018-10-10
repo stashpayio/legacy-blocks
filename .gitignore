@@ -133,3 +133,10 @@ make
 # CLion
 .idea
 cmake-build-debug
+
+
+# legacy blocks for stash
+.vscode
+.disableseeds
+*.csv
+
